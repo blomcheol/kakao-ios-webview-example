@@ -16,11 +16,7 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Javascript SDK Demo 페이지
-        let url = URL(string: "https://developers.kakao.com/docs/js/demos")
-        
-        createWebView(frame: self.view.bounds, configuration: WKWebViewConfiguration())
-            .load(URLRequest(url: url!))
+        self.home(self)
     }
     
     func createWebView(frame: CGRect, configuration: WKWebViewConfiguration) -> WKWebView {
@@ -71,6 +67,34 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         // 서비스 상황에 맞는 나머지 로직을 구현합니다.
         
         decisionHandler(.allow)
+    }
+    
+    @IBAction func back(_ sender: Any) {
+        if let topWebView = self.webViews.last {
+            if topWebView.canGoBack {
+                topWebView.goBack()
+            } else if topWebView != self.webViews.first {
+                self.webViews.popLast()?.removeFromSuperview()
+            }
+        }
+    }
+    
+    @IBAction func forward(_ sender: Any) {
+        self.webViews.last?.goForward()
+    }
+    
+    @IBAction func reload(_ sender: Any) {
+        self.webViews.last?.reload()
+    }
+    
+    @IBAction func home(_ sender: Any) {
+        self.webViews.removeAll()
+        
+        // Javascript SDK Demo 페이지
+        let url = URL(string: "https://developers.kakao.com/docs/js/demos")
+        
+        createWebView(frame: self.view.bounds, configuration: WKWebViewConfiguration())
+            .load(URLRequest(url: url!))
     }
 }
 
